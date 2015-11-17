@@ -401,6 +401,7 @@ public class BreakoutGame extends AppCompatActivity{
                     paddle.setMovementState(paddle.STOPPED);
                     break;
             }
+            update();
             return true;
         }
 
