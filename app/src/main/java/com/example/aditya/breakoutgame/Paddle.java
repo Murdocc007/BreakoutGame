@@ -37,11 +37,11 @@ public class Paddle {
     public Paddle(int screenX, int screenY){
         // 130 pixels wide and 20 pixels high
         length = 130;
-        height = 20;
+        height = 10;
 
         // Start paddle in roughly the sceen centre
         x = screenX / 2;
-        y = screenY - 20;
+        y =  screenY-100;
 
         rect = new RectF(x, y, x + length, y + height);
 
