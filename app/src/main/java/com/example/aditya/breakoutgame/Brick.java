@@ -7,6 +7,12 @@ import android.graphics.RectF;
 
 public class Brick {
 
+    /* type is used to indicate the color of the brick*/
+    public int type;
+    /*how many times a brick has to be hit inorder to disappear*/
+    public int hit;
+
+
     private RectF rect;
 
     private boolean isVisible;

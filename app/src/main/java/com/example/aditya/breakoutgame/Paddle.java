@@ -36,14 +36,14 @@ public class Paddle {
     // in the screen width and height
     public Paddle(int screenX, int screenY){
         // 130 pixels wide and 20 pixels high
-        length = 130;
-        height = 10;
+        length = 230;
+        height = 50;
 
         // Start paddle in roughly the sceen centre
         x = screenX / 2;
-        y =  screenY-100;
+        y =  screenY-200;
 
-        rect = new RectF(x, y, x + length, y + height);
+        rect = new RectF(x-length/2, y, x + length/2, y + height);
 
         // How fast is the paddle in pixels per second
         paddleSpeed = 350;
@@ -58,6 +58,14 @@ public class Paddle {
     // This method will be used to change/set if the paddle is going left, right or nowhere
     public void setMovementState(int state){
         paddleMoving = state;
+    }
+
+    //this function will reset the paddle for a new game
+    public void reset(int x,int y){
+        rect.left = x / 2-length/2;
+        rect.bottom =  y-200;
+        rect.top=rect.bottom-height;
+        rect.right=x/2+length/2;
     }
 
     // This update method will be called from update in BreakoutView

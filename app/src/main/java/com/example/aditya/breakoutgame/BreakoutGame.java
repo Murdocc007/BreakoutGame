@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class BreakoutGame extends AppCompatActivity{
 
@@ -170,15 +171,20 @@ public class BreakoutGame extends AppCompatActivity{
 
             // Put the ball back to the start
             ball.reset(screenX, screenY);
-
+            paddle.reset(screenX, screenY);
             int brickWidth = screenX / 8;
             int brickHeight = screenY / 10;
 
+
+            Random r=new Random();
             // Build a wall of bricks
             numBricks = 0;
             for(int column = 0; column < 8; column ++ ){
                 for(int row = 0; row < 3; row ++ ){
                     bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight);
+                    //assigning it a random number
+                    bricks[numBricks].type=r.nextInt(7-1);
+                    bricks[numBricks].hit=bricks[numBricks].type;
                     numBricks ++;
                 }
             }
@@ -226,6 +232,7 @@ public class BreakoutGame extends AppCompatActivity{
             // Move the paddle if required
             paddle.update(fps);
 
+            //Move the ball
             ball.update(fps);
 
             // Check for ball colliding with a brick
@@ -234,14 +241,18 @@ public class BreakoutGame extends AppCompatActivity{
                 if (bricks[i].getVisibility()){
 
                     if(RectF.intersects(bricks[i].getRect(), ball.getRect())) {
-                        bricks[i].setInvisible();
+                        bricks[i].hit--;
+                        if(bricks[i].hit==0)
+                        {
+                            bricks[i].setInvisible();
+                            score = score + 10;
+                            soundPool.play(explodeID, 1, 1, 0, 0, 1);
+                        }
                         ball.reverseYVelocity();
-                        score = score + 10;
-
-                        soundPool.play(explodeID, 1, 1, 0, 0, 1);
                     }
                 }
             }
+
 
             // Check for ball colliding with paddle
             if(RectF.intersects(paddle.getRect(),ball.getRect())) {
@@ -260,6 +271,7 @@ public class BreakoutGame extends AppCompatActivity{
                 // Lose a life
                 lives --;
                 soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
+
 
                 if(lives == 0){
                     paused = true;
@@ -291,6 +303,7 @@ public class BreakoutGame extends AppCompatActivity{
                 soundPool.play(beep3ID, 1, 1, 0, 0, 1);
             }
 
+
             // Pause if cleared screen
             if(score == numBricks * 10){
                 paused = true;
@@ -302,13 +315,14 @@ public class BreakoutGame extends AppCompatActivity{
         // Draw the newly updated scene
         public void draw() {
 
+
             // Make sure our drawing surface is valid or we crash
             if (ourHolder.getSurface().isValid()) {
                 // Lock the canvas ready to draw
                 canvas = ourHolder.lockCanvas();
 
                 // Draw the background color
-                canvas.drawColor(Color.argb(255,  26, 128, 182));
+                canvas.drawColor(Color.argb(255, 26, 128, 182));
 
                 // Choose the brush color for drawing
                 paint.setColor(Color.argb(255,  255, 255, 255));
@@ -325,6 +339,17 @@ public class BreakoutGame extends AppCompatActivity{
                 // Draw the bricks if visible
                 for(int i = 0; i < numBricks; i++){
                     if(bricks[i].getVisibility()) {
+                        if(bricks[i].type==5)
+                            paint.setColor(Color.argb(150,000, 000, 000));//black color
+                        else if(bricks[i].type==4)
+                            paint.setColor(Color.argb(255, 255, 000, 000));//Red color
+                        else if(bricks[i].type==3)
+                            paint.setColor(Color.argb(255, 000, 255, 000));//Green color
+                        else if(bricks[i].type==2)
+                            paint.setColor(Color.argb(255, 000, 000, 255));//Blue color
+                        else
+                            paint.setColor(Color.argb(255,255,255,255));//white color
+
                         canvas.drawRect(bricks[i].getRect(), paint);
                     }
                 }
@@ -383,14 +408,17 @@ public class BreakoutGame extends AppCompatActivity{
 
                 // Player has touched the screen
                 case MotionEvent.ACTION_DOWN:
-
-                    paused = false;
-
-                    if(motionEvent.getX() > screenX / 2){
-                        paddle.setMovementState(paddle.RIGHT);
+                    if(motionEvent.getX() >= paddle.getRect().left){
+                        if(paddle.getRect().right > screenX - 10)
+                            paddle.setMovementState(paddle.LEFT);
+                        else
+                            paddle.setMovementState(paddle.RIGHT);
                     }
                     else{
-                        paddle.setMovementState(paddle.LEFT);
+                        if(paddle.getRect().left<10)
+                            paddle.setMovementState(paddle.RIGHT);
+                        else
+                            paddle.setMovementState(paddle.LEFT);
                     }
 
                     break;
@@ -401,7 +429,6 @@ public class BreakoutGame extends AppCompatActivity{
                     paddle.setMovementState(paddle.STOPPED);
                     break;
             }
-            update();
             return true;
         }
 
