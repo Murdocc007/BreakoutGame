@@ -32,9 +32,9 @@ public class Ball {
 
     public void update(long fps){
         rect.left = rect.left + (xVelocity / fps);
-        rect.top = rect.top + (yVelocity / fps);
+        rect.bottom = rect.bottom + (yVelocity / fps);
         rect.right = rect.left + ballWidth;
-        rect.bottom = rect.top - ballHeight;
+        rect.top = rect.bottom - ballHeight;
     }
 
     public void reverseYVelocity(){
@@ -66,9 +66,9 @@ public class Ball {
 
     public void reset(int x, int y){
         rect.left = x / 2;
-        rect.top = y - 20;
+        rect.top = y - 20-ballHeight;
         rect.right = x / 2 + ballWidth;
-        rect.bottom = y - 20 - ballHeight;
+        rect.bottom = y - 20 ;
     }
 
 }

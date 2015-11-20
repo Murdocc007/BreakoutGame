@@ -14,6 +14,11 @@ public class Paddle {
     private float length;
     private float height;
 
+    //this will hold the screen width and the height of the screen
+    private int screenWidth;
+    private int screenHeight;
+
+
     // X is the far left of the rectangle which forms our paddle
     private float x;
 
@@ -39,11 +44,15 @@ public class Paddle {
         length = 130;
         height = 10;
 
+        //initializing the width and the height
+        screenWidth=screenX;
+        screenHeight=screenY;
+
         // Start paddle in roughly the sceen centre
         x = screenX / 2;
         y =  screenY-100;
 
-        rect = new RectF(x, y, x + length, y + height);
+        rect = new RectF(x, y, x + length, y+height );
 
         // How fast is the paddle in pixels per second
         paddleSpeed = 350;
@@ -64,11 +73,11 @@ public class Paddle {
     // It determines if the paddle needs to move and changes the coordinates
     // contained in rect if necessary
     public void update(long fps){
-        if(paddleMoving == LEFT){
+        if(x - paddleSpeed / fps>=10 && paddleMoving == LEFT){
             x = x - paddleSpeed / fps;
         }
 
-        if(paddleMoving == RIGHT){
+        if(x + paddleSpeed / fps+length<= screenWidth-10 &&  paddleMoving == RIGHT){
             x = x + paddleSpeed / fps;
         }
 
