@@ -11,6 +11,12 @@ public class Brick {
 
     private boolean isVisible;
 
+    /*gives the type of brick*/
+    public int type;
+
+    /*gives the number of hits required inorder to become invisible*/
+    public int hits;
+
     public Brick(int row, int column, int width, int height){
 
         isVisible = true;

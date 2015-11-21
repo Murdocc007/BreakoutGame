@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class BreakoutGame extends AppCompatActivity{
 
@@ -81,11 +82,18 @@ public class BreakoutGame extends AppCompatActivity{
         int screenX;
         int screenY;
 
+        //The maximum score of the game
+        int maxScore=0;
+
         // The players paddle
         Paddle paddle;
 
         // A ball
         Ball ball;
+
+
+        //This stores the the x coordinate of the initial touch
+        float initialTouch=0;
 
         // Up to 200 bricks
         Brick[] bricks = new Brick[200];
@@ -172,13 +180,22 @@ public class BreakoutGame extends AppCompatActivity{
             ball.reset(screenX, screenY);
 
             int brickWidth = screenX / 8;
-            int brickHeight = screenY / 10;
+            int brickHeight = screenY / 12;
+
+            Random r=new Random();
 
             // Build a wall of bricks
             numBricks = 0;
             for(int column = 0; column < 8; column ++ ){
                 for(int row = 0; row < 3; row ++ ){
                     bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight);
+                    int temp=0;
+                    while(temp==0)
+                    {
+                        temp=r.nextInt(7-1);
+                    }
+                    bricks[numBricks].type=temp;
+                    bricks[numBricks].hits=bricks[numBricks].type;
                     numBricks ++;
                 }
             }
@@ -199,7 +216,6 @@ public class BreakoutGame extends AppCompatActivity{
                 long startFrameTime = System.currentTimeMillis();
 
                 // Update the frame
-                // Update the frame
                 if(!paused){
                     update();
                 }
@@ -214,6 +230,7 @@ public class BreakoutGame extends AppCompatActivity{
                 if (timeThisFrame >= 1) {
                     fps = 1000 / timeThisFrame;
                 }
+
 
             }
 
@@ -234,7 +251,10 @@ public class BreakoutGame extends AppCompatActivity{
                 if (bricks[i].getVisibility()){
 
                     if(RectF.intersects(bricks[i].getRect(), ball.getRect())) {
-                        bricks[i].setInvisible();
+                        bricks[i].hits--;
+                        if(bricks[i].hits==0) {
+                            bricks[i].setInvisible();
+                        }
                         ball.reverseYVelocity();
                         score = score + 10;
 
@@ -325,6 +345,16 @@ public class BreakoutGame extends AppCompatActivity{
                 // Draw the bricks if visible
                 for(int i = 0; i < numBricks; i++){
                     if(bricks[i].getVisibility()) {
+                        if(bricks[i].type==5)
+                            paint.setColor(Color.argb(150,000, 000, 000));//black color
+                        else if(bricks[i].type==4)
+                            paint.setColor(Color.argb(255, 255, 000, 000));//Red color
+                        else if(bricks[i].type==3)
+                            paint.setColor(Color.argb(255, 000, 255, 000));//Green color
+                        else if(bricks[i].type==2)
+                            paint.setColor(Color.argb(255, 000, 000, 255));//Blue color
+                        else
+                            paint.setColor(Color.argb(255,255,255,255));//white color
                         canvas.drawRect(bricks[i].getRect(), paint);
                     }
                 }
@@ -337,7 +367,7 @@ public class BreakoutGame extends AppCompatActivity{
                 canvas.drawText("Score: " + score + "   Lives: " + lives, 10,50, paint);
 
                 // Has the player cleared the screen?
-                if(score == numBricks * 10){
+                if(score == 300){
                     paint.setTextSize(90);
                     canvas.drawText("YOU HAVE WON!", 10,screenY/2, paint);
                 }
@@ -379,20 +409,29 @@ public class BreakoutGame extends AppCompatActivity{
         @Override
         public boolean onTouchEvent(MotionEvent motionEvent) {
 
+
             switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
 
                 // Player has touched the screen
                 case MotionEvent.ACTION_DOWN:
-
                     paused = false;
+                    initialTouch=motionEvent.getX();
+                    break;
 
-                    if(motionEvent.getX() > screenX / 2){
+                //Player is moving the finger on the screen
+                case MotionEvent.ACTION_MOVE:
+                    float x=motionEvent.getX();
+                    if(x-initialTouch>0)
                         paddle.setMovementState(paddle.RIGHT);
-                    }
-                    else{
+                    else if(x-initialTouch<0)
                         paddle.setMovementState(paddle.LEFT);
+                    else
+                    {
+                        if(x-paddle.getRect().left<=0)
+                            paddle.setMovementState(paddle.LEFT);
+                        if(x-paddle.getRect().right>=0)
+                            paddle.setMovementState(paddle.RIGHT);
                     }
-
                     break;
 
                 // Player has removed finger from screen
@@ -401,7 +440,7 @@ public class BreakoutGame extends AppCompatActivity{
                     paddle.setMovementState(paddle.STOPPED);
                     break;
             }
-            update();
+//            update();
             return true;
         }
 
