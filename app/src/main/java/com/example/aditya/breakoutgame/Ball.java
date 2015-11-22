@@ -3,38 +3,56 @@ package com.example.aditya.breakoutgame;
 /**
  * Created by aditya on 11/17/15.
  */
-import android.graphics.RectF;
+//import android.graphics.RectF;
 
 import java.util.Random;
 
 public class Ball {
-    RectF rect;
+//    RectF rect;
     float xVelocity;
     float yVelocity;
-    float ballWidth = 10;
-    float ballHeight = 10;
+//    float ballWidth = 10;
+//    float ballHeight = 10;
+    float centerX;
+    float centerY;
+    float radius;
 
     public Ball(int screenX, int screenY){
 
         // Start the ball travelling straight up at 100 pixels per second
-        xVelocity = 200;
-        yVelocity = -400;
+        xVelocity = 100;
+        yVelocity = -200;
 
         // Place the ball in the centre of the screen at the bottom
         // Make it a 10 pixel x 10 pixel square
-        rect = new RectF();
+//        rect = new RectF();
 
+        radius=screenX/12;
     }
 
-    public RectF getRect(){
-        return rect;
-    }
+//    public RectF getRect(){
+//        return rect;
+//    }
 
     public void update(long fps){
-        rect.left = rect.left + (xVelocity / fps);
-        rect.bottom = rect.bottom + (yVelocity / fps);
-        rect.right = rect.left + ballWidth;
-        rect.top = rect.bottom - ballHeight;
+//        rect.left = rect.left + (xVelocity / fps);
+//        rect.bottom = rect.bottom + (yVelocity / fps);
+//        rect.right = rect.left + ballWidth;
+//        rect.top = rect.bottom - ballHeight;
+        centerX=centerX+(xVelocity/fps);
+        centerY=centerY+(yVelocity/fps);
+    }
+
+    public float getX(){
+        return centerX;
+    }
+
+    public float getY(){
+        return centerY;
+    }
+
+    public float getR(){
+        return radius;
     }
 
     public void reverseYVelocity(){
@@ -55,20 +73,16 @@ public class Ball {
     }
 
     public void clearObstacleY(float y){
-        rect.bottom = y;
-        rect.top = y - ballHeight;
+        centerY = y;
     }
 
     public void clearObstacleX(float x){
-        rect.left = x;
-        rect.right = x + ballWidth;
+        centerX=x;
     }
 
     public void reset(int x, int y){
-        rect.left = x / 2;
-        rect.top = y - 150-ballHeight;
-        rect.right = x / 2 + ballWidth;
-        rect.bottom = y - 150 ;
+        centerX = x / 2;
+        centerY= y - 300;
     }
 
 }

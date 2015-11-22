@@ -41,7 +41,7 @@ public class Paddle {
     // in the screen width and height
     public Paddle(int screenX, int screenY){
         // 130 pixels wide and 20 pixels high
-        length = 130;
+        length = screenX/6;
         height = screenY/6;
 
         //initializing the width and the height

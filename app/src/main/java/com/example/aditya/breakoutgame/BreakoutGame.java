@@ -8,6 +8,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -26,6 +29,8 @@ import android.view.MenuItem;
 
 import java.io.IOException;
 import java.util.Random;
+
+import static java.lang.Math.abs;
 
 public class BreakoutGame extends AppCompatActivity{
 
@@ -51,7 +56,7 @@ public class BreakoutGame extends AppCompatActivity{
 
     // Notice we implement runnable so we have
     // A thread and can override the run method.
-    class BreakoutView extends SurfaceView implements Runnable {
+    class BreakoutView extends SurfaceView implements Runnable,SensorEventListener {
 
         // This is our thread
         Thread gameThread = null;
@@ -226,11 +231,11 @@ public class BreakoutGame extends AppCompatActivity{
                 // Calculate the fps this frame
                 // We can then use the result to
                 // time animations and more.
-                timeThisFrame = System.currentTimeMillis() - startFrameTime;
-                if (timeThisFrame >= 1) {
-                    fps = 1000 / timeThisFrame;
-                }
-
+//                timeThisFrame = System.currentTimeMillis() - startFrameTime;
+//                if (timeThisFrame >= 1) {
+//                    fps = 1000 / timeThisFrame;
+//                }
+                    fps=50;
 
             }
 
@@ -250,7 +255,7 @@ public class BreakoutGame extends AppCompatActivity{
 
                 if (bricks[i].getVisibility()){
 
-                    if(RectF.intersects(bricks[i].getRect(), ball.getRect())) {
+                    if(intersects(bricks[i].getRect(), ball)) {
                         bricks[i].hits--;
                         if(bricks[i].hits==0) {
                             bricks[i].setInvisible();
@@ -264,18 +269,18 @@ public class BreakoutGame extends AppCompatActivity{
             }
 
             // Check for ball colliding with paddle
-            if(RectF.intersects(paddle.getRect(),ball.getRect())) {
+            if(intersects(paddle.getRect(), ball)) {
                 ball.setRandomXVelocity();
                 ball.reverseYVelocity();
-                ball.clearObstacleY(paddle.getRect().top - 2);
+                ball.clearObstacleY(paddle.getRect().top - ball.getR() - 2);
 
                 soundPool.play(beep1ID, 1, 1, 0, 0, 1);
             }
 
             // Bounce the ball back when it hits the bottom of screen
-            if(ball.getRect().bottom > screenY){
+            if(ball.getY()+ball.getR() > screenY){
                 ball.reverseYVelocity();
-                ball.clearObstacleY(screenY - 2);
+                ball.clearObstacleY(screenY - ball.getR() - 2);
 
                 // Lose a life
                 lives --;
@@ -288,25 +293,25 @@ public class BreakoutGame extends AppCompatActivity{
             }
 
             // Bounce the ball back when it hits the top of screen
-            if(ball.getRect().top < 0){
+            if(ball.getY()-ball.getR() < 0){
                 ball.reverseYVelocity();
-                ball.clearObstacleY(12);
+                ball.clearObstacleY(ball.getR()+12);
 
                 soundPool.play(beep2ID, 1, 1, 0, 0, 1);
             }
 
             // If the ball hits left wall bounce
-            if(ball.getRect().left < 0){
+            if(ball.getX()-ball.getR() < 0){
                 ball.reverseXVelocity();
-                ball.clearObstacleX(2);
+                ball.clearObstacleX(ball.getR()+2);
 
                 soundPool.play(beep3ID, 1, 1, 0, 0, 1);
             }
 
             // If the ball hits right wall bounce
-            if(ball.getRect().right > screenX - 10){
+            if(ball.getX()+ball.getR() > screenX - 10){
                 ball.reverseXVelocity();
-                ball.clearObstacleX(screenX - 22);
+                ball.clearObstacleX(screenX - ball.getR() - 22);
 
                 soundPool.play(beep3ID, 1, 1, 0, 0, 1);
             }
@@ -337,7 +342,7 @@ public class BreakoutGame extends AppCompatActivity{
                 canvas.drawRect(paddle.getRect(), paint);
 
                 // Draw the ball
-                canvas.drawRect(ball.getRect(), paint);
+                canvas.drawCircle(ball.centerX, ball.centerY, ball.radius, paint);
 
                 // Change the brush color for drawing
                 paint.setColor(Color.argb(255,  249, 129, 0));
@@ -383,6 +388,20 @@ public class BreakoutGame extends AppCompatActivity{
             }
 
         }
+
+        public boolean intersects(RectF rect,Ball ball){
+
+            if((abs(ball.getX() -rect.left)< ball.getR() || abs(ball.getX() -rect.right)< ball.getR() )&&
+                    (abs(ball.getY()-rect.top)<ball.getR() ||abs(ball.getY()-rect.bottom)<ball.getR() ))
+            {
+                return true;
+            }
+
+
+            return false;
+        }
+
+
 
         // If SimpleGameEngine Activity is paused/stopped
         // shutdown our thread.
@@ -444,6 +463,15 @@ public class BreakoutGame extends AppCompatActivity{
             return true;
         }
 
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
     }
     // This is the end of our BreakoutView inner class
 
