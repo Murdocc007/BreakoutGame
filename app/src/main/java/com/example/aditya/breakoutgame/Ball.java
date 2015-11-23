@@ -65,7 +65,7 @@ public class Ball {
 
     public void setRandomXVelocity(){
         Random generator = new Random();
-        int answer = generator.nextInt(2);
+        int answer = 7-generator.nextInt(8);
 
         if(answer == 0){
             reverseXVelocity();

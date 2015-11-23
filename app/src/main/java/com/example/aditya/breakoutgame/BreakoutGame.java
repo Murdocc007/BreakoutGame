@@ -11,6 +11,7 @@ import android.graphics.RectF;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -26,13 +27,15 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.Random;
 
+import static android.hardware.SensorManager.SENSOR_ACCELEROMETER;
 import static java.lang.Math.abs;
 
-public class BreakoutGame extends AppCompatActivity{
+public class BreakoutGame extends AppCompatActivity {
 
     // gameView will be the view of the game
     // It will also hold the logic of the game
@@ -49,7 +52,7 @@ public class BreakoutGame extends AppCompatActivity{
 
     }
 
-    // Here is our implementation of BreakoutView
+     // Here is our implementation of BreakoutView
     // It is an inner class.
     // Note how the final closing curly brace }
     // is inside the BreakoutGame class
@@ -86,6 +89,13 @@ public class BreakoutGame extends AppCompatActivity{
         // The size of the screen in pixels
         int screenX;
         int screenY;
+
+        //Sensor Manager for the Accelerometer
+        private SensorManager senSensorManager;
+        private Sensor senAccelerometer;
+        private long lastUpdate = -1;
+        private float last_x, last_y, last_z;
+        private static final int SHAKE_THRESHOLD = 800;
 
         //The maximum score of the game
         int maxScore=0;
@@ -175,6 +185,12 @@ public class BreakoutGame extends AppCompatActivity{
                 Log.e("error", "failed to load sound files");
             }
 
+
+            senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+            senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
+
+
             createBricksAndRestart();
 
         }
@@ -185,7 +201,7 @@ public class BreakoutGame extends AppCompatActivity{
             ball.reset(screenX, screenY);
 
             int brickWidth = screenX / 8;
-            int brickHeight = screenY / 12;
+            int brickHeight = screenY ;
 
             Random r=new Random();
 
@@ -193,12 +209,13 @@ public class BreakoutGame extends AppCompatActivity{
             numBricks = 0;
             for(int column = 0; column < 8; column ++ ){
                 for(int row = 0; row < 3; row ++ ){
-                    bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight);
+                    bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight/(9-row));
                     int temp=0;
                     while(temp==0)
                     {
                         temp=r.nextInt(7-1);
                     }
+                    maxScore+=temp;
                     bricks[numBricks].type=temp;
                     bricks[numBricks].hits=bricks[numBricks].type;
                     numBricks ++;
@@ -372,7 +389,7 @@ public class BreakoutGame extends AppCompatActivity{
                 canvas.drawText("Score: " + score + "   Lives: " + lives, 10,50, paint);
 
                 // Has the player cleared the screen?
-                if(score == 300){
+                if(score == maxScore*10){
                     paint.setTextSize(90);
                     canvas.drawText("YOU HAVE WON!", 10,screenY/2, paint);
                 }
@@ -391,10 +408,15 @@ public class BreakoutGame extends AppCompatActivity{
 
         public boolean intersects(RectF rect,Ball ball){
 
-            if((abs(ball.getX() -rect.left)< ball.getR() || abs(ball.getX() -rect.right)< ball.getR() )&&
-                    (abs(ball.getY()-rect.top)<ball.getR() ||abs(ball.getY()-rect.bottom)<ball.getR() ))
+            if((abs(ball.getX() -rect.left)< ball.getR() || abs(ball.getX() -rect.right)< ball.getR() ))
             {
-                return true;
+                if (abs(ball.getY()-rect.top)<ball.getR())//Top right or Top left
+                    return true;
+                else if(abs(ball.getY()-rect.bottom)<ball.getR())//Bottom right or bottom left
+                    return true;
+                else if((ball.getX()-rect.top)<=0 && (ball.getX()-rect.bottom)>=0)
+                    return true;
+                else return false;
             }
 
 
@@ -406,6 +428,8 @@ public class BreakoutGame extends AppCompatActivity{
         // If SimpleGameEngine Activity is paused/stopped
         // shutdown our thread.
         public void pause() {
+            //Unregistering the sensor manager
+            senSensorManager.unregisterListener(this);
             playing = false;
             try {
                 gameThread.join();
@@ -418,6 +442,8 @@ public class BreakoutGame extends AppCompatActivity{
         // If SimpleGameEngine Activity is started theb
         // start our thread.
         public void resume() {
+            //Registering the sensor manager
+            senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
             playing = true;
             gameThread = new Thread(this);
             gameThread.start();
@@ -463,9 +489,47 @@ public class BreakoutGame extends AppCompatActivity{
             return true;
         }
 
+
+        public  float Round(float Rval, int Rpl) {
+            float p = (float)Math.pow(10,Rpl);
+            Rval = Rval * p;
+            float tmp = Math.round(Rval);
+            return (float)tmp/p;
+        }
+
         @Override
         public void onSensorChanged(SensorEvent event) {
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                long curTime = System.currentTimeMillis();
+                // only allow one update every 100ms.
+                if ((curTime - lastUpdate) > 100) {
+                    long diffTime = (curTime - lastUpdate);
+                    lastUpdate = curTime;
 
+
+                    float x = event.values[SensorManager.DATA_X];
+                    float y = event.values[SensorManager.DATA_Y];
+                    float z = event.values[SensorManager.DATA_Z];
+
+                    float prevVelocity=ball.xVelocity;
+
+                    //Left Shake
+                    if(Round(x,4)>5.0000){
+                        ball.xVelocity-=150;
+                    }//Right shake
+                    else if(Round(x,4)<-5.0000){
+                        ball.xVelocity+=150;
+                    }
+                    else
+                    {
+                        ball.xVelocity=prevVelocity;
+                    }
+
+                    last_x = x;
+                    last_y = y;
+                    last_z = z;
+                }
+            }
         }
 
         @Override
