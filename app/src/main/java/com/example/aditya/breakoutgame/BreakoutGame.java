@@ -407,11 +407,11 @@ public class BreakoutGame extends AppCompatActivity {
 
             if((abs(ball.getX() -rect.left)< ball.getR() || abs(ball.getX() -rect.right)< ball.getR() ))
             {
-                if (abs(ball.getY()-rect.top)<ball.getR())//Top right or Top left
+                if (abs(ball.getY()-rect.top)<=ball.getR())//Top right or Top left
                     return true;
-                else if(abs(ball.getY()-rect.bottom)<ball.getR())//Bottom right or bottom left
+                else if(abs(ball.getY()-rect.bottom)<=ball.getR())//Bottom right or bottom left
                     return true;
-                else if((ball.getX()-rect.top)<=ball.getR() && (ball.getX()-rect.bottom)>=ball.getR())
+                else if((ball.getX()-rect.top)<=0 && (ball.getX()-rect.bottom)>=0)//Ball has hit the middle of the brick on the right or on the left
                     return true;
                 else return false;
             }
