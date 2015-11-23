@@ -411,7 +411,7 @@ public class BreakoutGame extends AppCompatActivity {
                     return true;
                 else if(abs(ball.getY()-rect.bottom)<ball.getR())//Bottom right or bottom left
                     return true;
-                else if((ball.getX()-rect.top)<=0 && (ball.getX()-rect.bottom)>=0)
+                else if((ball.getX()-rect.top)<=ball.getR() && (ball.getX()-rect.bottom)>=ball.getR())
                     return true;
                 else return false;
             }
