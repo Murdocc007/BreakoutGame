@@ -49,7 +49,7 @@ public class Paddle {
         screenHeight=screenY;
 
         // Start paddle in roughly the sceen centre
-        x = screenX / 2;
+        x = screenX / 2-length/2;
         y =  screenY-150;
 
         rect = new RectF(x, y, x + length, y+height );
@@ -62,6 +62,14 @@ public class Paddle {
     // defines our paddle available in BreakoutView class
     public RectF getRect(){
         return rect;
+    }
+
+
+    public void reset(float screenX,float screenY){
+        rect.left = screenX / 2-length/2;
+        rect.top =  screenY-150;
+        rect.right=rect.left+length;
+        rect.bottom=rect.top+length;
     }
 
     // This method will be used to change/set if the paddle is going left, right or nowhere

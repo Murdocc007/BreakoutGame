@@ -83,8 +83,7 @@ public class BreakoutGame extends AppCompatActivity {
         // This variable tracks the game frame rate
         long fps;
 
-        // This is used to help calculate the fps
-        private long timeThisFrame;
+
 
         // The size of the screen in pixels
         int screenX;
@@ -106,6 +105,10 @@ public class BreakoutGame extends AppCompatActivity {
         // A ball
         Ball ball;
 
+        //Used for storing the start time of the game
+        long startTime;
+        long timer;
+        int firstTime=0;
 
         //This stores the the x coordinate of the initial touch
         float initialTouch=0;
@@ -125,8 +128,6 @@ public class BreakoutGame extends AppCompatActivity {
         // The score
         int score = 0;
 
-        // Lives
-        int lives = 3;
 
         // When the we initialize (call new()) on gameView
         // This special constructor method runs
@@ -153,6 +154,9 @@ public class BreakoutGame extends AppCompatActivity {
 
             // Create a ball
             ball = new Ball(screenX, screenY);
+
+
+
 
             // Load the sounds
 
@@ -199,9 +203,15 @@ public class BreakoutGame extends AppCompatActivity {
 
             // Put the ball back to the start
             ball.reset(screenX, screenY);
-
+            paddle.reset(screenX,screenY);
             int brickWidth = screenX / 8;
             int brickHeight = screenY ;
+
+            //Initializing the timer variables
+            startTime=0;
+            timer=0;
+            firstTime=0;
+
 
             Random r=new Random();
 
@@ -222,11 +232,8 @@ public class BreakoutGame extends AppCompatActivity {
                 }
             }
 
-            // if game over reset scores and lives
-            if(lives == 0) {
-                score = 0;
-                lives = 3;
-            }
+            score=0;
+            paused=true;
 
         }
 
@@ -234,25 +241,23 @@ public class BreakoutGame extends AppCompatActivity {
         public void run() {
             while (playing) {
 
-                // Capture the current time in milliseconds in startFrameTime
-                long startFrameTime = System.currentTimeMillis();
-
                 // Update the frame
                 if(!paused){
+
+                    if(firstTime==0)
+                    {
+                        startTime=System.currentTimeMillis();
+                        firstTime=1;
+                    }
+                    timer=System.currentTimeMillis()-startTime;
                     update();
                 }
 
                 // Draw the frame
                 draw();
 
-                // Calculate the fps this frame
-                // We can then use the result to
-                // time animations and more.
-//                timeThisFrame = System.currentTimeMillis() - startFrameTime;
-//                if (timeThisFrame >= 1) {
-//                    fps = 1000 / timeThisFrame;
-//                }
-                    fps=50;
+                //Used to control the speed
+                fps=50;
 
             }
 
@@ -299,14 +304,10 @@ public class BreakoutGame extends AppCompatActivity {
                 ball.reverseYVelocity();
                 ball.clearObstacleY(screenY - ball.getR() - 2);
 
-                // Lose a life
-                lives --;
                 soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
 
-                if(lives == 0){
-                    paused = true;
-                    createBricksAndRestart();
-                }
+                createBricksAndRestart();
+
             }
 
             // Bounce the ball back when it hits the top of screen
@@ -334,7 +335,7 @@ public class BreakoutGame extends AppCompatActivity {
             }
 
             // Pause if cleared screen
-            if(score == numBricks * 10){
+            if(score == maxScore * 10){
                 paused = true;
                 createBricksAndRestart();
             }
@@ -386,7 +387,8 @@ public class BreakoutGame extends AppCompatActivity {
 
                 // Draw the score
                 paint.setTextSize(40);
-                canvas.drawText("Score: " + score + "   Lives: " + lives, 10,50, paint);
+                canvas.drawText("Score: " + score +
+                        "Timer :"+timer, 10,50, paint);
 
                 // Has the player cleared the screen?
                 if(score == maxScore*10){
@@ -394,11 +396,6 @@ public class BreakoutGame extends AppCompatActivity {
                     canvas.drawText("YOU HAVE WON!", 10,screenY/2, paint);
                 }
 
-                // Has the player lost?
-                if(lives <= 0){
-                    paint.setTextSize(90);
-                    canvas.drawText("YOU HAVE LOST!", 10,screenY/2, paint);
-                }
 
                 // Draw everything to the screen
                 ourHolder.unlockCanvasAndPost(canvas);
