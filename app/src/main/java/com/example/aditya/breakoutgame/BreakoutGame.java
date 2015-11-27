@@ -19,14 +19,19 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -41,6 +46,8 @@ public class BreakoutGame extends AppCompatActivity {
     // It will also hold the logic of the game
     // and respond to screen touches as well
     BreakoutView breakoutView;
+    LayoutParams params;
+    Button playButton, pauseButton;
 
     //This variable becomes 1 as soon as we start the game
     int firstTimeRun=0;
@@ -49,10 +56,59 @@ public class BreakoutGame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Initialize gameView and set it as the view
         breakoutView = new BreakoutView(this);
-        setContentView(breakoutView);
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
 
+        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(R.layout.custom_toolbar, layout, false);
+        layout.addView(v);
+        layout.addView(breakoutView);
+       // parentLayout.add(layout);
+
+
+        params = layout.getLayoutParams();
+// Changes the height and width to the specified *pixels*
+//        params.height = 100;
+//        params.width = 100;
+
+        // Now lets get the screen size
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int screenHeight = metrics.heightPixels;
+        int screenWidth = metrics.widthPixels;
+
+        // Initialize gameView and set it as the view
+
+        setContentView(layout);
+
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.my_action_bar_toolbar);
+//
+//        if(toolbar != null) {
+//            setSupportActionBar(toolbar);
+//        }
+        playButton=(Button)findViewById(R.id.playButton);
+        pauseButton=(Button)findViewById(R.id.pauseButton);
+        pauseButton.setVisibility(View.INVISIBLE);
+/*
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playButton.setVisibility(View.VISIBLE);
+                pauseButton.setVisibility(View.INVISIBLE);
+                breakoutView.resume();
+            }
+        });
+
+        pauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pauseButton.setVisibility(View.VISIBLE);
+                playButton.setVisibility(View.INVISIBLE);
+                breakoutView.pause();
+            }
+        });
+*/
     }
 
      // Here is our implementation of BreakoutView

@@ -16,10 +16,11 @@ public class HallOfFame extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hall_of_fame);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setTitleColor(Color.WHITE);
-        setSupportActionBar(toolbar);
-        setTitleColor(Color.WHITE);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_action_bar_toolbar);
+
+        if(toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
 
 
         /*

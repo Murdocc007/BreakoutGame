@@ -13,27 +13,31 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
-        <activity
-            android:name=".ScoreEntry"
-            android:label="@string/title_activity_score_entry"
-            android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
+            android:name=".ScoreEntry"
+            android:label="@string/title_activity_score_entry"
+            android:theme="@style/AppTheme" >
+
+
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
+        <activity
             android:name=".HallOfFame"
             android:label="@string/title_activity_hall_of_fame"
             android:theme="@style/AppTheme.NoActionBar" >
+
+
         </activity>
     </application>
 
