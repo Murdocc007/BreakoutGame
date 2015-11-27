@@ -42,6 +42,9 @@ public class BreakoutGame extends AppCompatActivity {
     // and respond to screen touches as well
     BreakoutView breakoutView;
 
+    //This variable becomes 1 as soon as we start the game
+    int firstTimeRun=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +85,10 @@ public class BreakoutGame extends AppCompatActivity {
 
         // This variable tracks the game frame rate
         long fps;
+
+        //The pause which helps us retain the state of the game
+        private Object pauseLock;
+        private boolean mPause;
 
 
 
@@ -155,8 +162,9 @@ public class BreakoutGame extends AppCompatActivity {
             // Create a ball
             ball = new Ball(screenX, screenY);
 
-
-
+            //Initialize the pause lock
+            pauseLock=new Object();
+            mPause=false;
 
             // Load the sounds
 
@@ -240,6 +248,16 @@ public class BreakoutGame extends AppCompatActivity {
         @Override
         public void run() {
             while (playing) {
+                synchronized (pauseLock) {
+                    while (mPause) {
+                        try {
+                            pauseLock.wait();
+                            } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
 
                 // Update the frame
                 if(!paused){
@@ -427,12 +445,8 @@ public class BreakoutGame extends AppCompatActivity {
         public void pause() {
             //Unregistering the sensor manager
             senSensorManager.unregisterListener(this);
-            playing = false;
-            try {
-                gameThread.join();
-            } catch (InterruptedException e) {
-                Log.e("Error:", "joining thread");
-            }
+//            playing = false;
+            mPause=true;
 
         }
 
@@ -442,8 +456,25 @@ public class BreakoutGame extends AppCompatActivity {
             //Registering the sensor manager
             senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
             playing = true;
-            gameThread = new Thread(this);
-            gameThread.start();
+            if(firstTimeRun==0)
+            {
+                firstTimeRun=1;
+                gameThread = new Thread(this);
+                gameThread.start();
+            }
+            else{
+                synchronized (pauseLock)
+                {
+                    mPause=false;
+                    try {
+                        pauseLock.wait(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    pauseLock.notifyAll();
+                }
+            }
+
         }
 
         // The SurfaceView class implements onTouchListener

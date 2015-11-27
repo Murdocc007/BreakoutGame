@@ -40,7 +40,7 @@ public class FileHandler {
     }
 
 
-    public void setContactObject(ArrayList<DataModel> inf){
+    public void setDataObject(ArrayList<DataModel> inf){
         clearContents();
         try {
 
@@ -75,7 +75,7 @@ public class FileHandler {
         }
     }
 
-    public ArrayList<DataModel> getContactObject(){
+    public ArrayList<DataModel> getDataObject(){
         ArrayList<DataModel> inf=new ArrayList<DataModel>();
         String str;
 
@@ -184,5 +184,20 @@ public class FileHandler {
         return String.valueOf(maxid);
     }
 
+    public void isInTopTen(DataModel obj){
+        ArrayList<DataModel> arr,finalArr;
+        arr=getDataObject();
+        finalArr=new ArrayList<DataModel>();
+        int compareScore,compareTime;
+        for(DataModel temp : arr){
+            compareScore=obj.getScore().compareTo(temp.getScore());
+            compareTime=obj.getTime().compareTo(temp.getTime());
+            if(compareScore==1||(compareScore==0 && compareTime==1)){
+                finalArr.add(obj);
+            }
+            else
+                finalArr.add(temp);
+        }
+    }
 
 }
