@@ -38,7 +38,7 @@
             android:layout_weight="10"
             android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/editText"
+            android:id="@+id/entryName"
             android:hint="enter your name..."/>
 
         <TextView
@@ -48,7 +48,7 @@
             android:layout_weight="10"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text"
-            android:id="@+id/textView" />
+            android:id="@+id/entryTime" />
 
         <TextView
             android:layout_width="match_parent"
@@ -57,7 +57,7 @@
             android:layout_weight="10"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text"
-            android:id="@+id/textView2" />
+            android:id="@+id/entryScore" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -72,14 +72,14 @@
                 android:layout_weight="50"
                 android:layout_height="match_parent"
                 android:text="Cancel"
-                android:id="@+id/button" />
+                android:id="@+id/buttonCancel" />
 
             <Button
                 android:layout_width="0dp"
                 android:layout_weight="50"
                 android:layout_height="match_parent"
                 android:text="Submit"
-                android:id="@+id/button2" />
+                android:id="@+id/buttonSubmit" />
 
         </LinearLayout>
     </LinearLayout>
