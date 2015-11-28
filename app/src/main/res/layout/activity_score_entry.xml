@@ -8,18 +8,24 @@
     android:fitsSystemWindows="true"
     tools:context="com.example.aditya.breakoutgame.ScoreEntry">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
     <android.support.design.widget.AppBarLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
-        <!--android:theme="@style/AppTheme.AppBarOverlay">-->
 
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <!--<android.support.v7.widget.Toolbar-->
-            <!--android:id="@+id/toolbar"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="?attr/actionBarSize"-->
-            <!--android:background="?attr/colorPrimary"-->
-            <!--/>-->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+
+        />
 
 
     </android.support.design.widget.AppBarLayout>
@@ -90,5 +96,5 @@
         <!--android:layout_width="wrap_content" android:layout_height="wrap_content"-->
         <!--android:layout_gravity="bottom|end" android:layout_margin="@dimen/fab_margin"-->
         <!--android:src="@android:drawable/ic_dialog_email" />-->
-
+</LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

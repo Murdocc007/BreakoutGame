@@ -1,6 +1,7 @@
 package com.example.aditya.breakoutgame;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -28,10 +29,12 @@ public class ScoreEntry extends AppCompatActivity {
         submitButton = (Button)findViewById(R.id.buttonSubmit);
         cancelButton = (Button)findViewById(R.id.buttonCancel);
 
-        /*
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Score Entry");
+        toolbar.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        toolbar.setTitleTextColor(Color.WHITE);
+        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
