@@ -1,6 +1,7 @@
 package com.example.aditya.breakoutgame;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
@@ -30,6 +31,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Toast;
@@ -48,6 +50,7 @@ public class BreakoutGame extends AppCompatActivity {
     BreakoutView breakoutView;
     LayoutParams params;
     Button playButton, pauseButton;
+    ImageView imageView;
 
     //This variable becomes 1 as soon as we start the game
     int firstTimeRun=0;
@@ -87,9 +90,20 @@ public class BreakoutGame extends AppCompatActivity {
 //        if(toolbar != null) {
 //            setSupportActionBar(toolbar);
 //        }
+
+        imageView = (ImageView)findViewById(R.id.imageView);
         playButton=(Button)findViewById(R.id.playButton);
         pauseButton=(Button)findViewById(R.id.pauseButton);
         pauseButton.setVisibility(View.INVISIBLE);
+
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                breakoutView.pause();
+                startActivity(new Intent(getApplicationContext(), HallOfFame.class));
+            }
+        });
 /*
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
