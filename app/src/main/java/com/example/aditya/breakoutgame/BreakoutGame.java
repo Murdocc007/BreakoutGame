@@ -104,12 +104,12 @@ public class BreakoutGame extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), HallOfFame.class));
             }
         });
-/*
+
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                playButton.setVisibility(View.VISIBLE);
-                pauseButton.setVisibility(View.INVISIBLE);
+                playButton.setVisibility(View.INVISIBLE);
+                pauseButton.setVisibility(View.VISIBLE);
                 breakoutView.resume();
             }
         });
@@ -117,12 +117,12 @@ public class BreakoutGame extends AppCompatActivity {
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pauseButton.setVisibility(View.VISIBLE);
-                playButton.setVisibility(View.INVISIBLE);
+                pauseButton.setVisibility(View.INVISIBLE);
+                playButton.setVisibility(View.VISIBLE);
                 breakoutView.pause();
             }
         });
-*/
+
     }
 
      // Here is our implementation of BreakoutView

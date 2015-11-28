@@ -7,10 +7,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class HallOfFame extends AppCompatActivity {
 
-
+    FileHandler fileHandler = new FileHandler(this);
+    ArrayList<DataModel> dataModelArrayList = new ArrayList<>();
+    ScoreAdapter scoreAdapter;
+    ListView scoreList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,19 +29,17 @@ public class HallOfFame extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
 
 
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        scoreList = (ListView)findViewById(R.id.scoreList);
 
-        */
+        //initialize arrayList dataModelArrayList with the data returned from the File Handler
+        dataModelArrayList = fileHandler.getDataObject();
 
+        //feed this attaylist to Adapter
+        scoreAdapter = new ScoreAdapter(getApplicationContext(), dataModelArrayList);
 
+        //link this adapter with the layout ListView
+        scoreList.setAdapter(scoreAdapter);
+        
     }
 
 }
