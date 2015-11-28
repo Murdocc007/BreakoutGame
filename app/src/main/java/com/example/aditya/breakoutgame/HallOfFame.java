@@ -39,7 +39,7 @@ public class HallOfFame extends AppCompatActivity {
 
         //link this adapter with the layout ListView
         scoreList.setAdapter(scoreAdapter);
-        
+
     }
 
 }

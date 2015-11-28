@@ -26,6 +26,7 @@
             android:id="@+id/timeTaken"
             android:textColor="@android:color/black"
             android:paddingLeft="10dp"/>
+
         <TextView
             android:layout_width="0dp"
             android:layout_weight="30"
