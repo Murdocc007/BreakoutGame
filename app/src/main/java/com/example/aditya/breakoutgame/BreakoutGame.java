@@ -333,6 +333,10 @@ public class BreakoutGame extends AppCompatActivity {
                     {
                         temp=r.nextInt(7-1);
                     }
+                    while(numBricks>=3 && bricks[numBricks-3].type==temp)
+                    {
+                        temp=r.nextInt(7-1);
+                    }
                     maxScore+=temp;
                     bricks[numBricks].type=temp;
                     bricks[numBricks].hits=bricks[numBricks].type;
