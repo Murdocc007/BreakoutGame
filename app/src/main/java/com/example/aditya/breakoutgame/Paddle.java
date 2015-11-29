@@ -55,7 +55,7 @@ public class Paddle {
         rect = new RectF(x, y, x + length, y+height );
 
         // How fast is the paddle in pixels per second
-        paddleSpeed = 350;
+        paddleSpeed = 250;
     }
 
     // This is a getter method to make the rectangle that
@@ -67,7 +67,7 @@ public class Paddle {
 
     public void reset(float screenX,float screenY){
         rect.left = screenX / 2-length/2;
-        rect.top =  screenY-150;
+        rect.top =  screenY-250;
         rect.right=rect.left+length;
         rect.bottom=rect.top+length;
     }

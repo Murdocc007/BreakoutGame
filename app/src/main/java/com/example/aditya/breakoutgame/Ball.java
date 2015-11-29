@@ -82,7 +82,7 @@ public class Ball {
 
     public void reset(int x, int y){
         centerX = x / 2;
-        centerY= y - 300;
+        centerY= y - 350;
     }
 
 }
