@@ -13,13 +13,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ScoreEntry extends AppCompatActivity {
 
     TextView entryTime, entryScore;
     EditText entryName;
     Button submitButton, cancelButton;
-    DataModel dataModel;
+    DataModel receivedDataModel;
     FileHandler fileHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,17 +42,17 @@ public class ScoreEntry extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
 
 
-        dataModel = new DataModel();
+        receivedDataModel = new DataModel();
         Bundle bundle = getIntent().getExtras();
         ArrayList<Integer> arrayList = bundle.getIntegerArrayList("caller");
         //set content in TextViews (entryScore and entryTime) here based on the actual values passed from the game Activity
 
         if(arrayList.size() != 0) {
-            dataModel.setScore(arrayList.get(0).toString());
-            dataModel.setTime(arrayList.get(1).toString());
+            receivedDataModel.setScore(arrayList.get(0).toString());
+            receivedDataModel.setTime(arrayList.get(1).toString());
 
-            entryTime.setText(dataModel.getTime().toString());
-            entryScore.setText(dataModel.getScore().toString());
+            entryTime.setText(receivedDataModel.getTime().toString());
+            entryScore.setText(receivedDataModel.getScore().toString());
         }
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,14 +71,21 @@ public class ScoreEntry extends AppCompatActivity {
                 arrayList = fileHandler.getDataObject();
 
                 //initialize data model based on the score values entered/passed from Game Activity
-                dataModel = new DataModel();
-                dataModel.setId(fileHandler.getMaxId() + 1);
-                dataModel.setName(entryName.getText().toString());
-                dataModel.setScore("123");
-                dataModel.setTime("asdasd");
+                receivedDataModel.setId(fileHandler.getMaxId() + 1);
+                receivedDataModel.setName(entryName.getText().toString());
 
                 //add entry to arrayList and then write new arrayLIst to the file
-                arrayList.add(dataModel);
+                arrayList.add(receivedDataModel);
+
+                //sort the returned arrayList and remove all after 10 entries
+                Collections.sort(arrayList, new CustomComparator());
+
+                if(arrayList.size() > 10){
+                    for(int i=10;i<arrayList.size()-1;i++){
+                        arrayList.remove(i);
+                    }
+                }
+
                 fileHandler.setDataObject(arrayList);
 
                 startActivity(new Intent(getApplicationContext(), HallOfFame.class));
@@ -84,6 +93,21 @@ public class ScoreEntry extends AppCompatActivity {
         });
 
 
+    }
+
+
+    public class CustomComparator implements Comparator<DataModel> {
+
+        @Override
+        public int compare(DataModel lhs, DataModel rhs) {
+            if (Integer.parseInt(lhs.getScore()) > Integer.parseInt(rhs.getScore())){
+                return -1;
+            }else if (Integer.parseInt(lhs.getScore()) < Integer.parseInt(rhs.getScore())){
+                return 1;
+            }else {
+                return 0;
+            }
+        }
     }
 
 
