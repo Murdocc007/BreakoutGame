@@ -2,13 +2,10 @@ package com.example.aditya.breakoutgame;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ListView;
-
 import java.util.ArrayList;
 
 public class HallOfFame extends AppCompatActivity {
@@ -42,4 +39,15 @@ public class HallOfFame extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        //
+        super.onBackPressed();
+    }
 }

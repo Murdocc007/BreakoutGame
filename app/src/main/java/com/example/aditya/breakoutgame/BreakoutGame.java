@@ -16,10 +16,7 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -28,15 +25,18 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
+
+
+
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 
 import static android.hardware.SensorManager.SENSOR_ACCELEROMETER;
@@ -51,6 +51,7 @@ public class BreakoutGame extends AppCompatActivity {
     LayoutParams params;
     Button playButton, pauseButton;
     ImageView imageView;
+    SeekBar ballSpeedSeekbar;
 
     //This variable becomes 1 as soon as we start the game
     int firstTimeRun=0;
@@ -91,10 +92,11 @@ public class BreakoutGame extends AppCompatActivity {
 //            setSupportActionBar(toolbar);
 //        }
 
+        ballSpeedSeekbar=(SeekBar)findViewById(R.id.seekBar);
         imageView = (ImageView)findViewById(R.id.imageView);
         playButton=(Button)findViewById(R.id.playButton);
         pauseButton=(Button)findViewById(R.id.pauseButton);
-        pauseButton.setVisibility(View.INVISIBLE);
+        playButton.setVisibility(View.INVISIBLE);
 
 
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -120,6 +122,24 @@ public class BreakoutGame extends AppCompatActivity {
                 pauseButton.setVisibility(View.INVISIBLE);
                 playButton.setVisibility(View.VISIBLE);
                 breakoutView.pause();
+            }
+        });
+
+        ballSpeedSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progressChanged = 0;
+
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progressChanged = progress;
+            }
+
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                breakoutView.fps = progressChanged;
+                Toast.makeText(getApplicationContext(), "seek bar progress:" + progressChanged,
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -154,7 +174,7 @@ public class BreakoutGame extends AppCompatActivity {
         Paint paint;
 
         // This variable tracks the game frame rate
-        long fps;
+        public long fps;
 
         //The pause which helps us retain the state of the game
         private Object pauseLock;
@@ -277,7 +297,17 @@ public class BreakoutGame extends AppCompatActivity {
 
         }
 
+        public int getScore(){
+            return score;
+        }
+
+
+        public int getTime(){
+            return (int)timer;
+        }
+
         public void createBricksAndRestart(){
+
 
             // Put the ball back to the start
             ball.reset(screenX, screenY);
@@ -394,6 +424,11 @@ public class BreakoutGame extends AppCompatActivity {
 
                 soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
 
+                //Akash---
+                ArrayList<Integer> arrayList = new ArrayList<>();
+                arrayList.add(getScore());
+                arrayList.add(getTime());
+                startActivity(new Intent(getApplicationContext(), ScoreEntry.class).putIntegerArrayListExtra("caller", arrayList));
                 createBricksAndRestart();
 
             }
@@ -425,6 +460,11 @@ public class BreakoutGame extends AppCompatActivity {
             // Pause if cleared screen
             if(score == maxScore * 10){
                 paused = true;
+                //Akash---
+                ArrayList<Integer> arrayList = new ArrayList<>();
+                arrayList.add(getScore());
+                arrayList.add(getTime());
+                startActivity(new Intent(getApplicationContext(), ScoreEntry.class).putIntegerArrayListExtra("caller", arrayList));
                 createBricksAndRestart();
             }
 
@@ -536,11 +576,7 @@ public class BreakoutGame extends AppCompatActivity {
                 synchronized (pauseLock)
                 {
                     mPause=false;
-                    try {
-                        pauseLock.wait(10000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+
                     pauseLock.notifyAll();
                 }
             }

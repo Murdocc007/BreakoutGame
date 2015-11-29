@@ -40,9 +40,18 @@ public class ScoreEntry extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
 
 
-
+        dataModel = new DataModel();
+        Bundle bundle = getIntent().getExtras();
+        ArrayList<Integer> arrayList = bundle.getIntegerArrayList("caller");
         //set content in TextViews (entryScore and entryTime) here based on the actual values passed from the game Activity
 
+        if(arrayList.size() != 0) {
+            dataModel.setScore(arrayList.get(0).toString());
+            dataModel.setTime(arrayList.get(1).toString());
+
+            entryTime.setText(dataModel.getTime().toString());
+            entryScore.setText(dataModel.getScore().toString());
+        }
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,7 +71,7 @@ public class ScoreEntry extends AppCompatActivity {
                 //initialize data model based on the score values entered/passed from Game Activity
                 dataModel = new DataModel();
                 dataModel.setId(fileHandler.getMaxId() + 1);
-                dataModel.setName("alsdk");
+                dataModel.setName(entryName.getText().toString());
                 dataModel.setScore("123");
                 dataModel.setTime("asdasd");
 
