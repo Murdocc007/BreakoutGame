@@ -184,20 +184,18 @@ public class FileHandler {
         return String.valueOf(maxid);
     }
 
-    public void isInTopTen(DataModel obj){
+    public int isInTopTen(DataModel obj){
         ArrayList<DataModel> arr,finalArr;
         arr=getDataObject();
-        finalArr=new ArrayList<DataModel>();
         int compareScore,compareTime;
         for(DataModel temp : arr){
             compareScore=obj.getScore().compareTo(temp.getScore());
             compareTime=obj.getTime().compareTo(temp.getTime());
             if(compareScore==1||(compareScore==0 && compareTime==1)){
-                finalArr.add(obj);
+                return 1;
             }
-            else
-                finalArr.add(temp);
         }
+        return 0;
     }
 
 }

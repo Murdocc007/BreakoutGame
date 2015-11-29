@@ -154,6 +154,8 @@ public class BreakoutGame extends AppCompatActivity {
     // A thread and can override the run method.
     class BreakoutView extends SurfaceView implements Runnable,SensorEventListener {
 
+        FileHandler fileHandler = new FileHandler(getApplicationContext());
+        DataModel dataModel = new DataModel();
         // This is our thread
         Thread gameThread = null;
 
@@ -429,11 +431,16 @@ public class BreakoutGame extends AppCompatActivity {
                 soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
 
                 //Akash---
-                ArrayList<Integer> arrayList = new ArrayList<>();
-                arrayList.add(getScore());
-                arrayList.add(getTime());
-                startActivity(new Intent(getApplicationContext(), ScoreEntry.class).putIntegerArrayListExtra("caller", arrayList));
-                createBricksAndRestart();
+                dataModel.setScore(Integer.toString(getScore()));
+                dataModel.setTime(Integer.toString(getTime()));
+                if(fileHandler.isInTopTen(dataModel) == 0) {
+                    ArrayList<Integer> arrayList = new ArrayList<>();
+                    arrayList.add(getScore());
+                    arrayList.add(getTime());
+                    startActivity(new Intent(getApplicationContext(), ScoreEntry.class).putIntegerArrayListExtra("caller", arrayList));
+                }else {
+                    createBricksAndRestart();
+                }
 
             }
 
@@ -448,7 +455,7 @@ public class BreakoutGame extends AppCompatActivity {
             // If the ball hits left wall bounce
             if(ball.getX()-ball.getR() < 0){
                 ball.reverseXVelocity();
-                ball.clearObstacleX(ball.getR()+2);
+                ball.clearObstacleX(ball.getR() + 2);
 
                 soundPool.play(beep3ID, 1, 1, 0, 0, 1);
             }
