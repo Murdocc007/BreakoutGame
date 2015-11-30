@@ -1,8 +1,5 @@
-package com.example.aditya.breakoutgame;
+package com.example.aditya.breakoutgame.models;
 
-/**
- * Created by aditya on 11/17/15.
- */
 import android.graphics.RectF;
 
 public class Paddle {
@@ -36,6 +33,9 @@ public class Paddle {
     // Is the paddle moving and in which direction
     private int paddleMoving = STOPPED;
 
+    //Name: Aditya Mahajan
+    //NetId:axm156630@utdallas.edu
+    //Date:11/18/2015
     // This the the constructor method
     // When we create an object from this class we will pass
     // in the screen width and height
@@ -58,6 +58,9 @@ public class Paddle {
         paddleSpeed = 250;
     }
 
+    //Name: Akash Chaturvedi
+    //NetId:axc144430@utdallas.edu
+    //Date:11/18/2015
     // This is a getter method to make the rectangle that
     // defines our paddle available in BreakoutView class
     public RectF getRect(){
@@ -71,12 +74,17 @@ public class Paddle {
         rect.right=rect.left+length;
         rect.bottom=rect.top+length;
     }
-
+    //Name: Aditya Mahajan
+    //NetId:axm156630@utdallas.edu
+    //Date:11/18/2015
     // This method will be used to change/set if the paddle is going left, right or nowhere
     public void setMovementState(int state){
         paddleMoving = state;
     }
 
+    //Name: Akash Chaturvedi
+    //NetId:axc144430@utdallas.edu
+    //Date:11/18/2015
     // This update method will be called from update in BreakoutView
     // It determines if the paddle needs to move and changes the coordinates
     // contained in rect if necessary

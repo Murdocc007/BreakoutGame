@@ -1,4 +1,4 @@
-package com.example.aditya.breakoutgame;
+package com.example.aditya.breakoutgame.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -36,17 +36,22 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import com.example.aditya.breakoutgame.models.Ball;
+import com.example.aditya.breakoutgame.models.Brick;
+import com.example.aditya.breakoutgame.models.ScoreDataModel;
+import com.example.aditya.breakoutgame.utilities.FileHandler;
+import com.example.aditya.breakoutgame.models.Paddle;
+import com.example.aditya.breakoutgame.R;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicLong;
 
-import static android.hardware.SensorManager.SENSOR_ACCELEROMETER;
 import static java.lang.Math.abs;
 
 public class BreakoutGame extends AppCompatActivity {
 
-    // gameView will be the view of the game
+    // breakoutView will be the view of the game
     // It will also hold the logic of the game
     // and respond to screen touches as well
     BreakoutView breakoutView;
@@ -59,6 +64,10 @@ public class BreakoutGame extends AppCompatActivity {
     //This variable becomes 1 as soon as we start the game
     int firstTimeRun=0;
 
+    //Name: Aditya Mahajan
+    //NetId:axm156630@utdallas.edu
+    //Date:11/1/2015
+    //onCreate Function of the Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,15 +80,9 @@ public class BreakoutGame extends AppCompatActivity {
         View v = inflater.inflate(R.layout.custom_toolbar, layout, false);
         layout.addView(v);
         layout.addView(breakoutView);
-       // parentLayout.add(layout);
 
 
         params = layout.getLayoutParams();
-// Changes the height and width to the specified *pixels*
-//        params.height = 100;
-//        params.width = 100;
-
-        // Now lets get the screen size
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int screenHeight = metrics.heightPixels;
@@ -88,12 +91,6 @@ public class BreakoutGame extends AppCompatActivity {
         // Initialize gameView and set it as the view
 
         setContentView(layout);
-
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.my_action_bar_toolbar);
-//
-//        if(toolbar != null) {
-//            setSupportActionBar(toolbar);
-//        }
 
         ballSpeedSeekbar=(SeekBar)findViewById(R.id.seekBar);
         imageView = (ImageView)findViewById(R.id.imageView);
@@ -154,13 +151,12 @@ public class BreakoutGame extends AppCompatActivity {
     // It is an inner class.
     // Note how the final closing curly brace }
     // is inside the BreakoutGame class
-
     // Notice we implement runnable so we have
     // A thread and can override the run method.
     class BreakoutView extends SurfaceView implements Runnable,SensorEventListener {
 
         FileHandler fileHandler = new FileHandler(getApplicationContext());
-        DataModel dataModel = new DataModel();
+        ScoreDataModel scoreDataModel = new ScoreDataModel();
         // This is our thread
         Thread gameThread = null;
 
@@ -233,8 +229,12 @@ public class BreakoutGame extends AppCompatActivity {
         int score = 0;
 
 
+         //Name: Akash Chaturvedi
+         //NetId:axc144430@utdallas.edu
+         //Date:11/1/2015
+         //Constructor of the BreakoutView class
         // When the we initialize (call new()) on gameView
-        // This special constructor method runs
+        // This special constructor method is called
         public BreakoutView(Context context) {
             // The next line of code asks the
             // SurfaceView class to set up our object.
@@ -304,15 +304,29 @@ public class BreakoutGame extends AppCompatActivity {
 
         }
 
+         //Name: Aditya Mahajan
+         //NetId:axm156630@utdallas.edu
+         //Date:11/1/2015
+         //function to return the score, which is required while passing score to the next activity
         public int getScore(){
             return score;
         }
 
 
+         //Name: Akash Chaturvedi
+         //NetId:axc144430@utdallas.edu
+         //Date:11/1/2015
+         //function to return the Time taken, which is required while passing score to the next activity
         public int getTime(){
             return (int)timer;
         }
 
+
+         //Name: Aditya Mahajan
+         //NetId:axm156630@utdallas.edu
+         //Date:11/1/2015
+         //this function is called when rhe game gets over so as to reset the position of all
+         //elements (Ball, Bricks, Paddle) as it was at the start of the game
         public void createBricksAndRestart(){
 
 
@@ -392,6 +406,9 @@ public class BreakoutGame extends AppCompatActivity {
 
         }
 
+         //Name: Akash Chaturvedi
+         //NetId:axc144430@utdallas.edu
+         //Date:11/1/2015
         // Everything that needs to be updated goes in here
         // Movement, collision detection etc.
         public void update() {
@@ -435,10 +452,9 @@ public class BreakoutGame extends AppCompatActivity {
 
                 soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
 
-                //Akash---
-                dataModel.setScore(Integer.toString(getScore()));
-                dataModel.setTime(Integer.toString(getTime()));
-                if(fileHandler.isInTopTen(dataModel) == 1) {
+                scoreDataModel.setScore(Integer.toString(getScore()));
+                scoreDataModel.setTime(Integer.toString(getTime()));
+                if(fileHandler.isInTopTen(scoreDataModel) == 1) {
                     ArrayList<Integer> arrayList = new ArrayList<>();
                     arrayList.add(getScore());
                     arrayList.add(getTime());
@@ -490,7 +506,10 @@ public class BreakoutGame extends AppCompatActivity {
 
         }
 
-        // Draw the newly updated scene
+         //Name: Aditya Mahajan
+         //NetId:axm156630@utdallas.edu
+         //Date:11/1/2015
+        // Function to draw the newly updated scene (Ball, paddle, bricks etc.)
         public void draw() {
 
             // Make sure our drawing surface is valid or we crash
@@ -553,6 +572,10 @@ public class BreakoutGame extends AppCompatActivity {
 
         }
 
+         //Name: Akash Chaturvedi
+         //NetId:axc144430@utdallas.edu
+         //Date:11/1/2015
+         //function that decides whether the ball stricks the brick
         public boolean intersects(RectF rect,Ball ball){
 
             if((abs(ball.getX() -rect.left)< ball.getR() || abs(ball.getX() -rect.right)< ball.getR() ))
@@ -571,8 +594,10 @@ public class BreakoutGame extends AppCompatActivity {
         }
 
 
-
-        // If SimpleGameEngine Activity is paused/stopped
+         //Name: Aditya Mahajan
+         //NetId:axm156630@utdallas.edu
+         //Date:11/1/2015
+        // when game is paused/stopped by the user
         // shutdown our thread.
         public void pause() {
             //Unregistering the sensor manager
@@ -582,7 +607,10 @@ public class BreakoutGame extends AppCompatActivity {
 
         }
 
-        // If SimpleGameEngine Activity is started theb
+         //Name: Akash Chaturvedi
+         //NetId:axc144430@utdallas.edu
+         //Date:11/1/2015
+        // when game is started theb
         // start our thread.
         public void resume() {
             //Registering the sensor manager
@@ -605,7 +633,10 @@ public class BreakoutGame extends AppCompatActivity {
 
         }
 
-        // The SurfaceView class implements onTouchListener
+         //Name: Aditya Mahajan
+         //NetId:axm156630@utdallas.edu
+         //Date:11/1/2015
+        //The SurfaceView class implements onTouchListener
         // So we can override this method and detect screen touches.
         @Override
         public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -646,6 +677,10 @@ public class BreakoutGame extends AppCompatActivity {
         }
 
 
+         //Name: Akash Chaturvedi
+         //NetId:axc144430@utdallas.edu
+         //Date:11/1/2015
+         //to make the ball round
         public  float Round(float Rval, int Rpl) {
             float p = (float)Math.pow(10,Rpl);
             Rval = Rval * p;
@@ -653,6 +688,10 @@ public class BreakoutGame extends AppCompatActivity {
             return (float)tmp/p;
         }
 
+         //Name: Aditya Mahajan
+         //NetId:axm156630@utdallas.edu
+         //Date:11/1/2015
+         //event driven callback which is invoked on device rotation/ orientation
         @Override
         public void onSensorChanged(SensorEvent event) {
             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
@@ -688,6 +727,10 @@ public class BreakoutGame extends AppCompatActivity {
             }
         }
 
+         //Name: Akash Chaturvedi
+         //NetId:axc144430@utdallas.edu
+         //Date:11/1/2015
+         //auto generated callback
         @Override
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
@@ -695,6 +738,9 @@ public class BreakoutGame extends AppCompatActivity {
     }
     // This is the end of our BreakoutView inner class
 
+    //Name: Aditya Mahajan
+    //NetId:axm156630@utdallas.edu
+    //Date:11/1/2015
     // This method executes when the player starts the game
     @Override
     protected void onResume() {
@@ -704,6 +750,9 @@ public class BreakoutGame extends AppCompatActivity {
         breakoutView.resume();
     }
 
+    //Name: Akash Chaturvedi
+    //NetId:axc144430@utdallas.edu
+    //Date:11/1/2015
     // This method executes when the player quits the game
     @Override
     protected void onPause() {
