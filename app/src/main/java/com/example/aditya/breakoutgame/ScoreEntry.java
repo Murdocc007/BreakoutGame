@@ -88,6 +88,7 @@ public class ScoreEntry extends AppCompatActivity {
 
                 fileHandler.setDataObject(arrayList);
 
+                finish();
                 startActivity(new Intent(getApplicationContext(), HallOfFame.class));
             }
         });

@@ -11,6 +11,7 @@
             android:layout_width="0dp"
             android:layout_weight="40"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Large Text"
             android:id="@+id/name"
@@ -24,6 +25,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Large Text"
             android:id="@+id/timeTaken"
+            android:gravity="center"
             android:textColor="@android:color/black"
             android:paddingLeft="10dp"/>
 
@@ -34,6 +36,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Large Text"
             android:id="@+id/score"
+            android:gravity="center"
             android:textColor="@android:color/black"
             android:paddingLeft="10dp"/>
 

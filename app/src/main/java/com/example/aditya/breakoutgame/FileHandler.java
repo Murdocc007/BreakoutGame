@@ -187,6 +187,9 @@ public class FileHandler {
     public int isInTopTen(DataModel obj){
         ArrayList<DataModel> arr,finalArr;
         arr=getDataObject();
+        if(arr.size() < 10){
+            return 1;
+        }
         int compareScore,compareTime;
         for(DataModel temp : arr){
             compareScore=obj.getScore().compareTo(temp.getScore());

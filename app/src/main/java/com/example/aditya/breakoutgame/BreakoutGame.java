@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -142,7 +143,7 @@ public class BreakoutGame extends AppCompatActivity {
 
             public void onStopTrackingTouch(SeekBar seekBar) {
                 fps = (99 - progressChanged);
-                Toast.makeText(getApplicationContext(), "seek bar progress:" + progressChanged,
+                Toast.makeText(getApplicationContext(), "Speed set to:" + progressChanged,
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -441,6 +442,7 @@ public class BreakoutGame extends AppCompatActivity {
                     ArrayList<Integer> arrayList = new ArrayList<>();
                     arrayList.add(getScore());
                     arrayList.add(getTime());
+                    createBricksAndRestart();
                     startActivity(new Intent(getApplicationContext(), ScoreEntry.class).putIntegerArrayListExtra("caller", arrayList));
                 }else {
                     createBricksAndRestart();
@@ -476,11 +478,14 @@ public class BreakoutGame extends AppCompatActivity {
             if(score == maxScore * 10){
                 paused = true;
                 //Akash---
+
                 ArrayList<Integer> arrayList = new ArrayList<>();
                 arrayList.add(getScore());
                 arrayList.add(getTime());
-                startActivity(new Intent(getApplicationContext(), ScoreEntry.class).putIntegerArrayListExtra("caller", arrayList));
                 createBricksAndRestart();
+
+                startActivity(new Intent(getApplicationContext(), ScoreEntry.class).putIntegerArrayListExtra("caller", arrayList));
+
             }
 
         }
@@ -494,10 +499,10 @@ public class BreakoutGame extends AppCompatActivity {
                 canvas = ourHolder.lockCanvas();
 
                 // Draw the background color
-                canvas.drawColor(Color.argb(255,  26, 128, 182));
+                canvas.drawColor(Color.argb(255, 26, 128, 182));
 
                 // Choose the brush color for drawing
-                paint.setColor(Color.argb(255,  255, 255, 255));
+                paint.setColor(Color.argb(255, 255, 255, 255));
 
                 // Draw the paddle
                 canvas.drawRect(paddle.getRect(), paint);
@@ -507,6 +512,8 @@ public class BreakoutGame extends AppCompatActivity {
 
                 // Change the brush color for drawing
                 paint.setColor(Color.argb(255,  249, 129, 0));
+                paint.setUnderlineText(true);
+                paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
 
                 // Draw the bricks if visible
                 for(int i = 0; i < numBricks; i++){
