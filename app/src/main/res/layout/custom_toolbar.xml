@@ -22,10 +22,12 @@
             android:layout_weight="70">
             <TextView
                 android:layout_width="wrap_content"
+                android:paddingTop="5dp"
                 android:layout_height="0dp"
                 android:layout_weight="30"
-                android:layout_gravity="center_horizontal|top"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_gravity="center_horizontal|bottom"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold"
                 android:text="Ball Speed Controller"
                 android:id="@+id/textView2" />
             <SeekBar

@@ -327,48 +327,49 @@ public class BreakoutGame extends AppCompatActivity {
          //Date:11/1/2015
          //this function is called when rhe game gets over so as to reset the position of all
          //elements (Ball, Bricks, Paddle) as it was at the start of the game
-        public void createBricksAndRestart(){
+         public void createBricksAndRestart(){
 
 
-            // Put the ball back to the start
-            ball.reset(screenX, screenY);
-            paddle.reset(screenX,screenY);
-            int brickWidth = screenX / 8;
-            int brickHeight = screenY ;
 
-            //Initializing the timer variables
-            startTime=0;
-            timer=0;
-            firstTime=0;
+             // Put the ball back to the start
+             ball.reset(screenX, screenY);
+             paddle.reset(screenX,screenY);
+             int brickWidth = screenX ;
+             int brickHeight = screenX/12 ;
+
+             //Initializing the timer variables
+             startTime=0;
+             timer=0;
+             firstTime=0;
 
 
-            Random r=new Random();
+             Random r=new Random();
 
-            // Build a wall of bricks
-            numBricks = 0;
-            for(int column = 0; column < 8; column ++ ){
-                for(int row = 0; row < 3; row ++ ){
-                    bricks[numBricks] = new Brick(row, column, brickWidth, brickHeight/(9-row));
-                    int temp=0;
-                    while(temp==0)
-                    {
-                        temp=r.nextInt(7-1);
-                    }
-                    while(numBricks>=3 && bricks[numBricks-3].type==temp)
-                    {
-                        temp=r.nextInt(7-1);
-                    }
-                    maxScore+=temp;
-                    bricks[numBricks].type=temp;
-                    bricks[numBricks].hits=bricks[numBricks].type;
-                    numBricks ++;
-                }
-            }
+             // Build a wall of bricks
+             numBricks = 0;
+             for(int column = 0; column < 8; column ++ ){
+                 for(int row = 2; row < 5; row ++ ){
+                     bricks[numBricks] = new Brick(row, column, brickWidth/(9-row), brickHeight);
+                     int temp=0;
+                     while(temp==0)
+                     {
+                         temp=r.nextInt(7-1);
+                     }
+                     while(numBricks>=3 && bricks[numBricks-3].type==temp)
+                     {
+                         temp=r.nextInt(7-1);
+                     }
+                     maxScore+=temp;
+                     bricks[numBricks].type=temp;
+                     bricks[numBricks].hits=bricks[numBricks].type;
+                     numBricks ++;
+                 }
+             }
 
-            score=0;
-            paused=true;
+             score=0;
+             paused=true;
 
-        }
+         }
 
         @Override
         public void run() {
@@ -521,10 +522,14 @@ public class BreakoutGame extends AppCompatActivity {
                 canvas.drawColor(Color.argb(255, 26, 128, 182));
 
                 // Choose the brush color for drawing
-                paint.setColor(Color.argb(255, 255, 255, 255));
+                paint.setColor(Color.argb(204, 101, 37, 1));
 
                 // Draw the paddle
                 canvas.drawRect(paddle.getRect(), paint);
+
+
+                // Choose the brush color for drawing
+                paint.setColor(Color.argb(255, 255, 255, 255));
 
                 // Draw the ball
                 canvas.drawCircle(ball.centerX, ball.centerY, ball.radius, paint);
@@ -552,12 +557,12 @@ public class BreakoutGame extends AppCompatActivity {
                 }
 
                 // Choose the brush color for drawing
-                paint.setColor(Color.argb(255,  166, 0, 1));
+                paint.setColor(Color.argb(255,  255, 255, 255));
 
                 // Draw the score
                 paint.setTextSize(40);
                 canvas.drawText("Score: " + score +
-                        "Timer :"+timer, 300,50, paint);
+                        "  Timer :"+timer, 150,50, paint);
 
                 // Has the player cleared the screen?
                 if(score == maxScore*10){
