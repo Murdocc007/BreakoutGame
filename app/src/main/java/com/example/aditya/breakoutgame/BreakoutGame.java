@@ -38,6 +38,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static android.hardware.SensorManager.SENSOR_ACCELEROMETER;
 import static java.lang.Math.abs;
@@ -52,6 +53,7 @@ public class BreakoutGame extends AppCompatActivity {
     Button playButton, pauseButton;
     ImageView imageView;
     SeekBar ballSpeedSeekbar;
+    public static long fps = 50;
 
     //This variable becomes 1 as soon as we start the game
     int firstTimeRun=0;
@@ -125,11 +127,13 @@ public class BreakoutGame extends AppCompatActivity {
             }
         });
 
+        ballSpeedSeekbar.setProgress(50);
         ballSpeedSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChanged = 0;
 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 progressChanged = progress;
+                fps = (99 - progressChanged);
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -137,7 +141,7 @@ public class BreakoutGame extends AppCompatActivity {
             }
 
             public void onStopTrackingTouch(SeekBar seekBar) {
-                breakoutView.fps = progressChanged;
+                fps = (99 - progressChanged);
                 Toast.makeText(getApplicationContext(), "seek bar progress:" + progressChanged,
                         Toast.LENGTH_SHORT).show();
             }
@@ -176,7 +180,7 @@ public class BreakoutGame extends AppCompatActivity {
         Paint paint;
 
         // This variable tracks the game frame rate
-        public long fps;
+       // public static fps;
 
         //The pause which helps us retain the state of the game
         private Object pauseLock;
@@ -381,7 +385,7 @@ public class BreakoutGame extends AppCompatActivity {
                 draw();
 
                 //Used to control the speed
-                fps=50;
+                //fps=50;
 
             }
 
@@ -433,7 +437,7 @@ public class BreakoutGame extends AppCompatActivity {
                 //Akash---
                 dataModel.setScore(Integer.toString(getScore()));
                 dataModel.setTime(Integer.toString(getTime()));
-                if(fileHandler.isInTopTen(dataModel) == 0) {
+                if(fileHandler.isInTopTen(dataModel) == 1) {
                     ArrayList<Integer> arrayList = new ArrayList<>();
                     arrayList.add(getScore());
                     arrayList.add(getTime());
@@ -522,12 +526,12 @@ public class BreakoutGame extends AppCompatActivity {
                 }
 
                 // Choose the brush color for drawing
-                paint.setColor(Color.argb(255,  255, 255, 255));
+                paint.setColor(Color.argb(255,  166, 0, 1));
 
                 // Draw the score
                 paint.setTextSize(40);
                 canvas.drawText("Score: " + score +
-                        "Timer :"+timer, 10,50, paint);
+                        "Timer :"+timer, 300,50, paint);
 
                 // Has the player cleared the screen?
                 if(score == maxScore*10){
