@@ -341,6 +341,7 @@ public class BreakoutGame extends AppCompatActivity {
              startTime=0;
              timer=0;
              firstTime=0;
+             maxScore=0;
 
 
              Random r=new Random();
@@ -437,7 +438,7 @@ public class BreakoutGame extends AppCompatActivity {
                         ball.reverseYVelocity();
                         score = score + 10;
 
-                        soundPool.play(explodeID, 1, 1, 0, 0, 1);
+//                        soundPool.play(explodeID, 1, 1, 0, 0, 1);
                     }
                 }
             }
@@ -448,7 +449,7 @@ public class BreakoutGame extends AppCompatActivity {
                 ball.reverseYVelocity();
                 ball.clearObstacleY(paddle.getRect().top - ball.getR() - 2);
 
-                soundPool.play(beep1ID, 1, 1, 0, 0, 1);
+//                soundPool.play(beep1ID, 1, 1, 0, 0, 1);
             }
 
             // Bounce the ball back when it hits the bottom of screen
@@ -456,7 +457,7 @@ public class BreakoutGame extends AppCompatActivity {
                 ball.reverseYVelocity();
                 ball.clearObstacleY(screenY - ball.getR() - 2);
 
-                soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
+//                soundPool.play(loseLifeID, 1, 1, 0, 0, 1);
 
                 scoreDataModel.setScore(Integer.toString(getScore()));
                 scoreDataModel.setTime(Integer.toString(getTime()));
@@ -477,7 +478,7 @@ public class BreakoutGame extends AppCompatActivity {
                 ball.reverseYVelocity();
                 ball.clearObstacleY(ball.getR()+12);
 
-                soundPool.play(beep2ID, 1, 1, 0, 0, 1);
+//                soundPool.play(beep2ID, 1, 1, 0, 0, 1);
             }
 
             // If the ball hits left wall bounce
@@ -485,7 +486,7 @@ public class BreakoutGame extends AppCompatActivity {
                 ball.reverseXVelocity();
                 ball.clearObstacleX(ball.getR() + 2);
 
-                soundPool.play(beep3ID, 1, 1, 0, 0, 1);
+//                soundPool.play(beep3ID, 1, 1, 0, 0, 1);
             }
 
             // If the ball hits right wall bounce
@@ -493,11 +494,11 @@ public class BreakoutGame extends AppCompatActivity {
                 ball.reverseXVelocity();
                 ball.clearObstacleX(screenX - ball.getR() - 22);
 
-                soundPool.play(beep3ID, 1, 1, 0, 0, 1);
+//                soundPool.play(beep3ID, 1, 1, 0, 0, 1);
             }
 
             // Pause if cleared screen
-            if(score == maxScore * 10){
+            if(score==maxScore*10){
                 paused = true;
                 //Akash---
 
@@ -524,7 +525,7 @@ public class BreakoutGame extends AppCompatActivity {
                 canvas = ourHolder.lockCanvas();
 
                 // Draw the background color
-                canvas.drawColor(Color.argb(255, 26, 128, 182));
+                canvas.drawColor(Color.rgb( 190, 190, 190));
 
                 // Choose the brush color for drawing
                 paint.setColor(Color.argb(204, 101, 37, 1));
@@ -569,11 +570,7 @@ public class BreakoutGame extends AppCompatActivity {
                 canvas.drawText("Score: " + score +
                         "  Timer :"+timer, 150,50, paint);
 
-                // Has the player cleared the screen?
-                if(score == maxScore*10){
-                    paint.setTextSize(90);
-                    canvas.drawText("YOU HAVE WON!", 10,screenY/2, paint);
-                }
+
 
 
                 // Draw everything to the screen
