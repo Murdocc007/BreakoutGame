@@ -350,7 +350,10 @@ public class BreakoutGame extends AppCompatActivity {
              for(int column = 0; column < 8; column ++ ){
                  for(int row = 2; row < 5; row ++ ){
                      bricks[numBricks] = new Brick(row, column, brickWidth/(9-row), brickHeight);
-                     int temp=0;
+                     if(bricks[numBricks].getRect().left>0 && bricks[numBricks].getRect().right<screenX)
+                     {
+                         int temp=0;
+
                      while(temp==0)
                      {
                          temp=r.nextInt(7-1);
@@ -363,7 +366,9 @@ public class BreakoutGame extends AppCompatActivity {
                      bricks[numBricks].type=temp;
                      bricks[numBricks].hits=bricks[numBricks].type;
                      numBricks ++;
+                     }
                  }
+
              }
 
              score=0;
