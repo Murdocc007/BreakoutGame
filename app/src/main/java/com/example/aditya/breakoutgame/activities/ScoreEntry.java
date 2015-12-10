@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.aditya.breakoutgame.models.ScoreDataModel;
 import com.example.aditya.breakoutgame.utilities.FileHandler;
@@ -71,6 +72,12 @@ public class ScoreEntry extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(entryName.getText().toString().isEmpty()){
+                    Toast.makeText(getApplicationContext(), "please enter your name",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 //first get the Max ID from the File Handler class and set maxid + 1 as new entry
                 fileHandler = new FileHandler(getApplicationContext());
 

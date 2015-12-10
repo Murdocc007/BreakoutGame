@@ -39,7 +39,7 @@ public class FileHandler {
         try {
 
             final File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/" );
-            File foo=new File(dir,"temp.txt");
+            File foo=new File(dir,"temp11.txt");
 
             PrintStream pr = new PrintStream(fileContext.openFileOutput(foo.getName(), Context.MODE_PRIVATE));
 
@@ -78,7 +78,7 @@ public class FileHandler {
         String str;
 
         final File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +"/Download" );
-        File foo=new File(dir,"temp.txt");
+        File foo=new File(dir,"temp11.txt");
 
         if(!foo.exists()) {
             try {
@@ -156,7 +156,7 @@ public class FileHandler {
     //function to clear the contents of file (top 10 scores)
     private void clearContents(){
         final File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/" );
-        File foo=new File(dir,"temp.txt");
+        File foo=new File(dir,"temp11.txt");
         try{
             FileOutputStream writer = fileContext.openFileOutput(foo.getName(),Context.MODE_PRIVATE);
 
@@ -181,7 +181,7 @@ public class FileHandler {
         String str;
         int maxid=0;
         final File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +"/Download" );
-        File foo=new File(dir,"temp.txt");
+        File foo=new File(dir,"temp11.txt");
         try{
             FileInputStream fis=fileContext.openFileInput(foo.getName());
             BufferedReader br=new BufferedReader(new InputStreamReader(fis));
